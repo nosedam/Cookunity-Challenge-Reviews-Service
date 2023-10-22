@@ -1,26 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Review } from './entities/review.entity';
 
 @Injectable()
 export class ReviewsService {
-  create(createReviewDto: CreateReviewDto) {
-    return 'This action adds a new review';
+
+  constructor(@InjectRepository(Review) private reviewsRepository: Repository<Review>) {}
+
+  async create(createReviewDto: CreateReviewDto) {
+    const review = await this.reviewsRepository.findOneBy({customerId: createReviewDto.customerId, mealId: createReviewDto.mealId})
+    if (review) {
+      throw new HttpException("Can't create two reviews for the same meal", HttpStatus.CONFLICT)
+    }
+    return this.reviewsRepository.save(createReviewDto);
   }
 
   findAll() {
-    return `This action returns all reviews`;
+    return this.reviewsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} review`;
-  }
-
-  update(id: number, updateReviewDto: UpdateReviewDto) {
-    return `This action updates a #${id} review`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} review`;
-  }
 }

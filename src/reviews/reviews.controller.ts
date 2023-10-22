@@ -1,14 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/role.enum';
+import { User } from 'src/users/entities/user.entity';
+import { LoggingService } from 'src/logging/logging.service';
+import { plainToInstance } from 'class-transformer';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('reviews')
 export class ReviewsController {
-  constructor(private readonly reviewsService: ReviewsService) {}
+  constructor(private readonly reviewsService: ReviewsService, private loggingService: LoggingService) {}
 
+  @Roles(Role.Customer)
   @Post()
-  create(@Body() createReviewDto: CreateReviewDto) {
+  create(@Body() createReviewDto: CreateReviewDto, @Req() req) {
+    const user = plainToInstance(User, req.user)
+    createReviewDto.customerId = user.id
+    createReviewDto.customerName = user.fullName
     return this.reviewsService.create(createReviewDto);
   }
 
@@ -17,18 +26,4 @@ export class ReviewsController {
     return this.reviewsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.reviewsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewsService.update(+id, updateReviewDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewsService.remove(+id);
-  }
 }

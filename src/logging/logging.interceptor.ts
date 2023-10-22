@@ -24,6 +24,7 @@ export class LoggingInterceptor implements NestInterceptor {
     
     if (req.user != null && req.user != undefined) {
       logRequestMessage["user_id"] = req.user.id
+      logRequestMessage["user_role"] = req.user.role
     }
 
     if (req.body != null && JSON.stringify(req.body) != "{}") {

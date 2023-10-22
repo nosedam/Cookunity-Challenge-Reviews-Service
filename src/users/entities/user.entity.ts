@@ -1,4 +1,4 @@
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, TableInheritance } from "typeorm";
 var bcrypt = require('bcryptjs');
 
@@ -29,6 +29,10 @@ export class User {
 
     @Column()
     lastName: string
+
+    get fullName(): string {
+        return `${this.firstName} ${this.lastName}`;
+    }
 
     @Column()
     role: string
