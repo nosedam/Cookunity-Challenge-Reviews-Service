@@ -13,6 +13,7 @@ import { RolesGuard } from './roles/roles.guard';
 import { RequestService } from './request/request.service';
 import { LoggingService } from './logging/logging.service';
 import { AuthModule } from './auth/auth.module';
+import { EventsService } from './events/events.service';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { AuthModule } from './auth/auth.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    EventsService,
   ],
 })
 export class AppModule {}

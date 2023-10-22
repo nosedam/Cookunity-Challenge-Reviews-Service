@@ -28,6 +28,14 @@ functions:
       DB_PASSWORD: "${env:DB_PASSWORD}"
       DB_DATABASE: "${env:DB_DATABASE}"
 
+resources:
+  Resources:
+    ReviewsTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+          DisplayName: 'reviews topic events'
+          TopicName: reviews
+
 plugins:
   - serverless-jetpack
   - serverless-offline
