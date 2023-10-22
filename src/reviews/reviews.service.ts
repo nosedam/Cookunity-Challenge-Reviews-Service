@@ -31,7 +31,7 @@ export class ReviewsService {
     return savedReview;
   }
 
-  averageRating(mealId: number) {
+  averageRating(mealId: string) {
     return this.reviewsRepository.average('rating', {mealId: mealId})
   }
 

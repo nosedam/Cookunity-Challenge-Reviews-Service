@@ -4,15 +4,15 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class Review {
     
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn("uuid")
+    id: string
 
     @Column({nullable: false})
-    mealId: number
+    mealId: string
 
     @Column({nullable: false})
     @Exclude()
-    customerId: number
+    customerId: string
 
     @Column({nullable: false})
     customerName: string
