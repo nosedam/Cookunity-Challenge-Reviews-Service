@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { Review } from './entities/review.entity';
 import { EventsService } from 'src/events/events.service';
 import { EventTypes } from 'src/events/events.enum';
-import { instanceToInstance } from 'class-transformer';
 import { ReviewCreatedEvent } from 'src/events/dto/review-created.dto';
 
 const MAX_REVIEW_RATING_DIGITS: number = 2
@@ -15,7 +14,7 @@ export class ReviewsService {
 
   constructor(
     @InjectRepository(Review) private reviewsRepository: Repository<Review>,
-    private eventsService: EventsService
+    private eventsService: EventsService,
   ) {}
 
   async create(createReviewDto: CreateReviewDto) {
@@ -26,7 +25,7 @@ export class ReviewsService {
 
     const savedReview = await this.reviewsRepository.save(createReviewDto)
 
-    this.sendReviewCreatedEvent(savedReview)
+    await this.sendReviewCreatedEvent(savedReview)
 
     return savedReview;
   }
@@ -45,8 +44,9 @@ export class ReviewsService {
     savedReviewEvent.averageMealRating = await this.averageRating(savedReviewEvent.mealId)
     savedReviewEvent.averageMealRating.toFixed(MAX_REVIEW_RATING_DIGITS)
 
-    this.eventsService.publishEvent(EventTypes.ReviewCreated, savedReviewEvent)
+    await this.eventsService.publishEvent(EventTypes.ReviewCreated, savedReviewEvent)
 
+    
   }
 
 }

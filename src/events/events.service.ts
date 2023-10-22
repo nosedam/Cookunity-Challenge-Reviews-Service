@@ -3,44 +3,46 @@ import { ConfigService } from '@nestjs/config';
 import * as aws from 'aws-sdk';
 import { LoggingService } from 'src/logging/logging.service';
 import { EventTypes } from './events.enum';
+import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
 
-  
+
 
 @Injectable()
 export class EventsService {
-    private sns: aws.SNS
+    private sns: SNSClient
 
     constructor(
         private configService: ConfigService,
         private loggingService: LoggingService
     ) {
-        this.sns = new aws.SNS({
+        this.sns = new SNSClient({
             region: configService.get<string>("AWS_REGION"),
             credentials: {
-                accessKeyId: configService.get<string>("AWS_ACCESS_KEY_ID"),
-                secretAccessKey: configService.get<string>("AWS_SECRET_ACCESS_KEY")
+                accessKeyId: configService.get<string>("AWS_KEY_ID"),
+                secretAccessKey: configService.get<string>("AWS_SECRET")
             }
-          });
+        })
+
     }
 
-    publishEvent(event: EventTypes, data: Record<string, any>): void {
-        
+    async publishEvent(event: EventTypes, data: Record<string, any>) {
+
         let toSend = {}
         toSend["event"] = event.toString()
-        toSend["data"] = {...data}
+        toSend["data"] = { ...data }
 
-        this.loggingService.log(toSend)
-
-        this. sns.publish(
-          {
+        const topic = `arn:aws:sns:${this.configService.get<string>("AWS_REGION")}:${this.configService.get<string>("AWS_ACCOUNT_ID")}:${this.configService.get<string>("AWS_REVIEWS_TOPIC_NAME")}`
+        this.loggingService.info(`Publishing ${event.toString()} to ${topic}`)
+        
+        
+        const publishCommand = new PublishCommand({
             Message: JSON.stringify(toSend),
-            TopicArn: `arn:aws:sns:${this.configService.get<string>("AWS_REGION")}:${this.configService.get<string>("AWS_ACCOUNT_ID")}:${this.configService.get<string>("AWS_REVIEWS_TOPIC_NAME")}`
-          }
-        ).promise().then(resp => {
-          this.loggingService.info(`Event ${event}, successfully sent`)
-        }).catch(err => {
-            this.loggingService.log({"Error from SNS": err}, "error")
-        });
-      }
+            TopicArn: topic
+        })
+        
+        const res = await this.sns.send(publishCommand)
+
+        this.loggingService.info(`Successfully published to ${topic} with messageId ${res.MessageId}`)
+    }
 
 }

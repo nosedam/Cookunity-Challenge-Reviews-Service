@@ -20,6 +20,11 @@ functions:
       - httpApi:
           method: any
           path: /{proxy+}
+    iamRoleStatements:
+      - Effect: Allow        
+        Action:
+          - sns:*
+        Resource: "*"
     environment:
       JWT_KEY: "${env:JWT_KEY}"
       DB_HOST: "${env:DB_HOST}"
@@ -27,6 +32,9 @@ functions:
       DB_USERNAME: "${env:DB_USERNAME}"
       DB_PASSWORD: "${env:DB_PASSWORD}"
       DB_DATABASE: "${env:DB_DATABASE}"
+      AWS_ACCOUNT_ID: "${env:AWS_ACCOUNT_ID}"
+      AWS_KEY_ID: "${env:AWS_KEY_ID}"
+      AWS_SECRET: "${env:AWS_SECRET}"
 
 resources:
   Resources:
@@ -39,3 +47,4 @@ resources:
 plugins:
   - serverless-jetpack
   - serverless-offline
+  - serverless-iam-roles-per-function

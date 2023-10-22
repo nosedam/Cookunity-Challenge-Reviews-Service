@@ -6,8 +6,8 @@ export default () => ({
     DB_PASSWORD: process.env.DB_PASSWORD,
     DB_DATABASE: process.env.DB_DATABASE,
     AWS_REGION: process.env.AWS_REGION,
-    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_KEY_ID: process.env.AWS_KEY_ID,
+    AWS_SECRET: process.env.AWS_SECRET,
     AWS_ACCOUNT_ID: process.env.AWS_ACCOUNT_ID,
     AWS_REVIEWS_TOPIC_NAME: "reviews"
   });
