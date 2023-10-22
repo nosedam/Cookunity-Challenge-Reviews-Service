@@ -6,6 +6,7 @@ import { Role } from 'src/roles/role.enum';
 import { User } from 'src/users/entities/user.entity';
 import { LoggingService } from 'src/logging/logging.service';
 import { plainToInstance } from 'class-transformer';
+import { Customer } from 'src/customers/entities/customer.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('reviews')
@@ -15,9 +16,8 @@ export class ReviewsController {
   @Roles(Role.Customer)
   @Post()
   create(@Body() createReviewDto: CreateReviewDto, @Req() req) {
-    const user = plainToInstance(User, req.user)
-    createReviewDto.customerId = user.id
-    createReviewDto.customerName = user.fullName
+    const customer = plainToInstance(Customer, req.user)
+    createReviewDto.customer = customer
     return this.reviewsService.create(createReviewDto);
   }
 

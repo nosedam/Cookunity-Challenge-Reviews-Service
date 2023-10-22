@@ -7,9 +7,10 @@ import { LoggingService } from 'src/logging/logging.service';
 import { RequestService } from 'src/request/request.service';
 import { EventsService } from 'src/events/events.service';
 import { ConfigModule } from '@nestjs/config';
+import { CustomersModule } from 'src/customers/customers.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Review]), ConfigModule],
+  imports: [TypeOrmModule.forFeature([Review]), ConfigModule, CustomersModule],
   controllers: [ReviewsController],
   providers: [ReviewsService, LoggingService, RequestService, EventsService],
 })

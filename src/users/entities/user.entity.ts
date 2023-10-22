@@ -6,23 +6,11 @@ var bcrypt = require('bcryptjs');
 @TableInheritance({ column: { name: "role" } })
 export class User {
 
-    @BeforeInsert()
-    async hashPassword() {
-        if (this.password) {
-            const salt = bcrypt.genSaltSync();
-            this.password = bcrypt.hashSync(this.password, salt);
-        }
-    }
-  
     @PrimaryGeneratedColumn("uuid")
     id: string
 
     @Column({unique: true})
     email: string
-
-    @Column()
-    @Exclude()
-    password: string
 
     @Column()
     firstName: string

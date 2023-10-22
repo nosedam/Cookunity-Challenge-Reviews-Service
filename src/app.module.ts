@@ -14,10 +14,12 @@ import { RequestService } from './request/request.service';
 import { LoggingService } from './logging/logging.service';
 import { AuthModule } from './auth/auth.module';
 import { EventsService } from './events/events.service';
+import { CustomersModule } from './customers/customers.module';
 
 @Module({
   imports: [
     AuthModule,
+    CustomersModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useClass: TypeOrmConfigService

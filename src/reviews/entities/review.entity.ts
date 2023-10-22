@@ -1,5 +1,6 @@
-import { Exclude } from "class-transformer";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Exclude, Expose } from "class-transformer";
+import { Customer } from "src/customers/entities/customer.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Review {
@@ -10,12 +11,14 @@ export class Review {
     @Column({nullable: false})
     mealId: string
 
-    @Column({nullable: false})
     @Exclude()
-    customerId: string
+    @ManyToOne(type => Customer, (customer) => customer.reviews)
+    customer: Customer
 
-    @Column({nullable: false})
-    customerName: string
+    @Expose()
+    get customerName() {
+        return `${this.customer.firstName} ${this.customer.lastName}`
+    }
 
     @Column({nullable: false})
     rating: number
