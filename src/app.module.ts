@@ -1,5 +1,4 @@
 import { Module, Scope } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ReviewsModule } from './reviews/reviews.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -31,7 +30,6 @@ import { CustomersModule } from './customers/customers.module';
     })
 
   ],
-  controllers: [AppController],
   providers: [
     AppService,
     LoggingService, 

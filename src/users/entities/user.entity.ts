@@ -22,6 +22,7 @@ export class User {
         return `${this.firstName} ${this.lastName}`;
     }
 
+    @Exclude()
     @Column()
     role: string
 

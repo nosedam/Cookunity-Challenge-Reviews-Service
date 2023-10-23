@@ -5,8 +5,9 @@ import { Repository } from 'typeorm';
 import { Review } from './entities/review.entity';
 import { EventsService } from 'src/events/events.service';
 import { EventTypes } from 'src/events/events.enum';
-import { ReviewCreatedEvent } from 'src/events/dto/review-created.dto';
+import { ReviewCreatedEvent } from 'src/reviews/events/review-created.dto';
 import { CustomersService } from 'src/customers/customers.service';
+import { instanceToInstance } from 'class-transformer';
 
 const MAX_REVIEW_RATING_DIGITS: number = 2
 
@@ -43,13 +44,12 @@ export class ReviewsService {
   }
 
   private async sendReviewCreatedEvent(review: Review) {
-    let savedReviewEvent: ReviewCreatedEvent = review
+    let savedReviewEvent: ReviewCreatedEvent = instanceToInstance<Review>(review)
     
     savedReviewEvent.averageMealRating = await this.averageRating(savedReviewEvent.mealId)
     savedReviewEvent.averageMealRating.toFixed(MAX_REVIEW_RATING_DIGITS)
 
     await this.eventsService.publishEvent(EventTypes.ReviewCreated, savedReviewEvent)
-
     
   }
 

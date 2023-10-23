@@ -7,13 +7,17 @@ import { User } from 'src/users/entities/user.entity';
 import { LoggingService } from 'src/logging/logging.service';
 import { plainToInstance } from 'class-transformer';
 import { Customer } from 'src/customers/entities/customer.entity';
+import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { Review } from './entities/review.entity';
 
 @UseInterceptors(ClassSerializerInterceptor)
+@ApiTags('reviews')
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService, private loggingService: LoggingService) {}
 
   @Roles(Role.Customer)
+  @ApiCreatedResponse({type: Review, isArray: false})
   @Post()
   create(@Body() createReviewDto: CreateReviewDto, @Req() req) {
     const customer = plainToInstance(Customer, req.user)

@@ -17,7 +17,7 @@ export class Review {
 
     @Expose()
     get customerName() {
-        return `${this.customer.firstName} ${this.customer.lastName}`
+        return `${this.customer?.firstName} ${this.customer?.lastName}`
     }
 
     @Column({nullable: false})
