@@ -18,7 +18,7 @@ export class User {
     @Column()
     lastName: string
 
-    get fullName(): string {
+    get fullName() {
         return `${this.firstName} ${this.lastName}`;
     }
 

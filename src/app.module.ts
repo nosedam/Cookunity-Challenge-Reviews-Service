@@ -1,4 +1,4 @@
-import { Module, Scope } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module, Scope } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ReviewsModule } from './reviews/reviews.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -40,13 +40,19 @@ import { CustomersModule } from './customers/customers.module';
       useClass: LoggingInterceptor,
     },
     {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
     },
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useExisting: JwtAuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useExisting: RolesGuard,
+    },
+    RolesGuard,
+    JwtAuthGuard,
     EventsService,
   ],
 })

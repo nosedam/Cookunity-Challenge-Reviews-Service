@@ -1,3 +1,4 @@
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { Customer } from "src/customers/entities/customer.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
@@ -5,21 +6,26 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class Review {
     
+    @ApiProperty()
     @PrimaryGeneratedColumn("uuid")
     id: string
 
+    @ApiProperty()
     @Column({nullable: false})
     mealId: string
 
-    @Exclude()
+    @ApiHideProperty()
     @ManyToOne(type => Customer, (customer) => customer.reviews)
+    @Exclude()
     customer: Customer
 
     @Expose()
-    get customerName() {
+    @ApiProperty()
+    get customerName(): string {
         return `${this.customer?.firstName} ${this.customer?.lastName}`
     }
 
+    @ApiProperty()
     @Column({nullable: false})
     rating: number
 

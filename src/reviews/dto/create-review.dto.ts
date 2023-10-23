@@ -14,5 +14,5 @@ export class CreateReviewDto {
     rating: number
 
     @ApiHideProperty()
-    customer: Customer
+    customer?: Customer
 }

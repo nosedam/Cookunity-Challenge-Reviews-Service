@@ -51,7 +51,6 @@ export class LoggingInterceptor implements NestInterceptor {
             }
             this.logger.log(logResponseMessage)
 
-            console.log()
         }),
       );
   }

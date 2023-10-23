@@ -7,7 +7,8 @@ import { EventsService } from 'src/events/events.service';
 import { EventTypes } from 'src/events/events.enum';
 import { ReviewCreatedEvent } from 'src/reviews/events/review-created.dto';
 import { CustomersService } from 'src/customers/customers.service';
-import { instanceToInstance } from 'class-transformer';
+import { instanceToInstance, plainToInstance } from 'class-transformer';
+import { Customer } from 'src/customers/entities/customer.entity';
 
 const MAX_REVIEW_RATING_DIGITS: number = 2
 
@@ -27,8 +28,11 @@ export class ReviewsService {
     }
 
     await this.customersService.createOrUpdate(createReviewDto.customer)
-
-    const savedReview = await this.reviewsRepository.save(createReviewDto)
+    let savedReview = await this.reviewsRepository.save(createReviewDto)
+    
+    const customer = plainToInstance(Customer, savedReview.customer)
+    savedReview = plainToInstance(Review, savedReview)
+    savedReview.customer = customer
 
     await this.sendReviewCreatedEvent(savedReview)
 
