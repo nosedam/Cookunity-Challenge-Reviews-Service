@@ -17,6 +17,7 @@ The reviews service generates events that are consumed by the meals service sqs 
 ### Available events
 
 - reviewCreated
+  
   This event contains information about the created review
 
   ```json
