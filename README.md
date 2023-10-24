@@ -14,6 +14,12 @@ The following diagram describes the architecture for this service
 The services are deployed serverlessly with AWS Lambda and the database is an RDS instance.
 The reviews service generates events that are consumed by the meals service sqs subscribed queue.
 
+### Database
+
+Database is hosted in an RDS MySQL instance.
+
+![](https://github.com/nosedam/Cookunity-Challenge/blob/main/img/db-reviews.drawio.png)
+
 ### Available events
 
 - reviewCreated
