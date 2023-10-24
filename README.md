@@ -14,6 +14,21 @@ The following diagram describes the architecture for this service
 The services are deployed serverlessly with AWS Lambda and the database is an RDS instance.
 The reviews service generates events that are consumed by the meals service sqs subscribed queue.
 
+### Available events
+
+- reviewCreated
+  This event contains information about the created review
+
+  ```json
+  {
+      "id": "string"
+      "mealId": "string"
+      "rating": 1
+      "averageMealRating": 2.54
+  }
+  ```
+
+
 ## Demo
 
 There are instances available to try the service. These instances are hosted by Amazon with the resources specified in the serverless.yml files of each repository.
