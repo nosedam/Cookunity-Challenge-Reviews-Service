@@ -1,38 +1,54 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Cookunity-Challenge-Reviews-Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This repository contains the information about the Reviews Service
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- It can create reviews
+- It emits an event when a review is created
 
-## Description
+## Architecture
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The following diagram describes the architecture for this service
 
-## Installation
+![](https://github.com/nosedam/Cookunity-Challenge/blob/main/img/reviews-service.drawio.png)
+
+The services are deployed serverlessly with AWS Lambda and the database is an RDS instance.
+The reviews service generates events that are consumed by the meals service sqs subscribed queue.
+
+## Demo
+
+There are instances available to try the service. These instances are hosted by Amazon with the resources specified in the serverless.yml files of each repository.
+
+- Swagger documentation: https://ig4dktrkej.execute-api.us-west-2.amazonaws.com/api
+- Service endpoint: https://ig4dktrkej.execute-api.us-west-2.amazonaws.com/api
+
+### Installation
+
+Development dependencies:
+
+- Node 18
+- NestJS
+- AWS Cli
+- Serverless
+
+#### Install node packages
 
 ```bash
 $ npm install
 ```
 
-## Running the app
+#### Source development variables
+
+Environment variables are loaded directly from the environment of the user.
+You can define them in a file and source them.
+
+```bash
+$ cp .example.env .env.dev
+$ vi .env.dev
+$ source .env.dev
+```
+
+
+#### Running the app locally with the NestJS server
 
 ```bash
 # development
@@ -40,34 +56,48 @@ $ npm run start
 
 # watch mode
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+### Deployment
+
+1. Configure your AWS credentials
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ aws configure
 ```
 
-## Support
+2. Define production variables
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+$ cp .example.env .env
+$ vi .env
+$ source .env
+```
 
-## Stay in touch
+3. Deploy to AWS
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+$ serverless deploy
+```
 
-## License
+### Tests
 
-Nest is [MIT licensed](LICENSE).
+Run the tests
+```bash
+# e2e tests
+$ npm run test:e2e
+```
+
+### Migrations
+
+Run migrations
+
+```bash
+$ npm run typeorm:run-migrations
+```
+
+Generate migrations
+
+```bash
+$ npm run typeorm:generate-migration
+```
